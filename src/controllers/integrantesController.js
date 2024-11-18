@@ -28,16 +28,16 @@ const getAllIntegrantes = (req,res) => {
 }
 
 const getIntegrantesByDni = (req, res) => {
-    const { dni } = req.params; // El dni llega como string
-    const dniNumber = parseInt(dni, 10); // Convertir a número
+    const { dni } = req.params; 
+    const dniNumber = parseInt(dni, 10); 
 
-    const integrantes = getIntegrantes(); // Obtener los datos del JSON
-    const integrante = integrantes.find((i) => i.dni === dniNumber); // Comparar como número
+    const integrantes = getIntegrantes(); 
+    const integrante = integrantes.find((i) => i.dni === dniNumber); 
 
     if (integrante) {
-        res.json(integrante); // Retornar el integrante si se encuentra
+        res.json(integrante); 
     } else {
-        res.status(404).send("Integrante no encontrado"); // Error 404 si no existe
+        res.status(404).send("Integrante no encontrado"); 
     }
 };
 
