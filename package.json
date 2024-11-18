@@ -1,0 +1,17 @@
+{
+  "name": "tp-1-backend",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1",
+    "method-override": "^3.0.0",
+    "nodemon": "^3.1.7"
+  }
+}
