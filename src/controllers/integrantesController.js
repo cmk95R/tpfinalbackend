@@ -26,4 +26,17 @@ const getAllIntegrantes = (req,res) => {
     res.json(integrantes);
 }
 
-module.exports = {getHome, getAllIntegrantes};
+const getIntegrantesByDni = (req, res) => {
+    const {dni} = req.params;
+    console.log(dni);
+    const integrante = getIntegrantes().find((i) => i.dni == dni);
+    console.log(integrante);
+    if(integrante){
+        res.json(integrante);
+    }else{
+        res.status(404).send("integrante no encontrado");
+    }
+    
+}
+
+module.exports = {getHome, getAllIntegrantes, getIntegrantesByDni};
