@@ -1,17 +1,18 @@
 const { json } = require("express");
 const fs = require ("fs");
+const { get } = require("http");
 const path = require ("path");
 const { stringify } = require("querystring");
 
-const productsFilePath = path.join(__dirname, '../db-json/integrantes.JSON');
+const integrantesFilePath = path.join(__dirname, '../db-json/integrantes.JSON');
 
 const getIntegrantes = () => {
-    const data = fs.readFileSync(productsFilePath, "utf-8");
+    const data = fs.readFileSync(integrantesFilePath, "utf-8");
     return JSON.parse(data);
 };
 
 const saveIntegrantes = (data) =>{
-    fs.writeFileSync("integrantes.JSON", json.stringify(data, null, 2), "utf-8");
+    fs.writeFileSync(integrantesFilePath, JSON.stringify(data, null, 2), "utf-8");
 }
 
 
@@ -27,16 +28,49 @@ const getAllIntegrantes = (req,res) => {
 }
 
 const getIntegrantesByDni = (req, res) => {
-    const {dni} = req.params;
-    console.log(dni);
-    const integrante = getIntegrantes().find((i) => i.dni == dni);
-    console.log(integrante);
-    if(integrante){
-        res.json(integrante);
-    }else{
-        res.status(404).send("integrante no encontrado");
+    const { dni } = req.params; // El dni llega como string
+    const dniNumber = parseInt(dni, 10); // Convertir a número
+
+    const integrantes = getIntegrantes(); // Obtener los datos del JSON
+    const integrante = integrantes.find((i) => i.dni === dniNumber); // Comparar como número
+
+    if (integrante) {
+        res.json(integrante); // Retornar el integrante si se encuentra
+    } else {
+        res.status(404).send("Integrante no encontrado"); // Error 404 si no existe
     }
-    
+};
+
+const addIntegrantes = (req, res) => {
+    const {nombre, apellido, dni, email} = req.body;
+    if (!nombre || !apellido || !dni || !email){
+        return res.status(400).send("Todos los campos son obligatorios")
+    }
+    const integrante = getIntegrantes();
+    integrante.push({nombre,apellido,dni,email});
+    saveIntegrantes(integrante);
+    res.json(integrante);
 }
 
-module.exports = {getHome, getAllIntegrantes, getIntegrantesByDni};
+const updateIntegranteByEmail = (req,res) =>{
+    const {email} = req.params;
+    const {apellido} = req.body;
+
+    if (!apellido){
+        res.status(400).send("El apellido es obligatorio");
+    }
+    const intengrantes = getIntegrantes();
+    const integrante = intengrante.find((i) => i.email === email)
+
+    if (!integrante){
+        integrante.apellido = apellido;
+        saveIntegrantes(integrantes);
+        res.json(integrante)
+    }else{
+        res.status(404).send("Ingrante no encontrado para actualizar");
+    }
+}
+
+
+
+module.exports = {getHome, getAllIntegrantes, getIntegrantesByDni,addIntegrantes, updateIntegranteByEmail};
