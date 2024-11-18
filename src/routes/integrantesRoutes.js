@@ -23,7 +23,7 @@ router.post("/integrantes/agregar", addIntegrantes);
 
 //*** RUTAS PUT ***// 
 
-router.put("/integrantes/:email");
+router.put("/integrantes/:email" , updateIntegranteByEmail);
 
 
 /*

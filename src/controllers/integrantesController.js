@@ -28,18 +28,17 @@ const getAllIntegrantes = (req,res) => {
 }
 
 const getIntegrantesByDni = (req, res) => {
-    const { dni } = req.params; 
-    const dniNumber = parseInt(dni, 10); 
-
-    const integrantes = getIntegrantes(); 
-    const integrante = integrantes.find((i) => i.dni === dniNumber); 
-
-    if (integrante) {
-        res.json(integrante); 
-    } else {
-        res.status(404).send("Integrante no encontrado"); 
+    const {dni} = req.params;
+    console.log(dni);
+    const integrante = getIntegrantes().find((i) => i.dni == dni);
+    console.log(integrante);
+    if(integrante){
+        res.json(integrante);
+    }else{
+        res.status(404).send("integrante no encontrado");
     }
-};
+
+}
 
 const addIntegrantes = (req, res) => {
     const {nombre, apellido, dni, email} = req.body;
@@ -52,24 +51,29 @@ const addIntegrantes = (req, res) => {
     res.json(integrante);
 }
 
-const updateIntegranteByEmail = (req,res) =>{
-    const {email} = req.params;
-    const {apellido} = req.body;
+const updateIntegranteByEmail = (req, res) => {
+    const { email } = req.params;
+    const { apellido } = req.body;
 
-    if (!apellido){
-        res.status(400).send("El apellido es obligatorio");
+    if (!apellido) {
+        return res.status(400).send("El apellido es obligatorio");
     }
-    const intengrantes = getIntegrantes();
-    const integrante = intengrante.find((i) => i.email === email)
 
-    if (!integrante){
+    const integrantes = getIntegrantes();
+    console.log("Integrantes disponibles:", integrantes); // Verifica el contenido del archivo
+    console.log("Email buscado:", email); // Verifica el email recibido
+
+    const integrante = integrantes.find((i) => i.email === email);
+
+    if (integrante) {
         integrante.apellido = apellido;
         saveIntegrantes(integrantes);
-        res.json(integrante)
-    }else{
-        res.status(404).send("Ingrante no encontrado para actualizar");
+        res.json(integrante);
+    } else {
+        res.status(404).send("Integrante no encontrado para actualizar");
     }
-}
+};
+
 
 
 
