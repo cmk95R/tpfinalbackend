@@ -6,7 +6,8 @@ const {
     getAllIntegrantes, 
     getIntegrantesByDni,
     addIntegrantes,
-    updateIntegranteByEmail
+    updateIntegranteByEmail,
+    deleteIntegrantesByDni
 
 } = require ("../controllers/integrantesController");
 
@@ -25,10 +26,9 @@ router.post("/integrantes/agregar", addIntegrantes);
 
 router.put("/integrantes/:email" , updateIntegranteByEmail);
 
+//*** RUTAS DELETE ***//
 
-/*
-
-router.put("/integrantes/:email");
 router.delete("/integrantes/:dni", deleteIntegrantesByDni);
-*/
+
+
 module.exports = router;
