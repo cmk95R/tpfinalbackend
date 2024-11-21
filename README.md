@@ -22,8 +22,13 @@ npm install
 
 npm run dev
 
-Imagenes 
+
+
+
+
+
 GET(/)
+
 ![WhatsApp Image 2024-11-20 at 22 42 33](https://github.com/user-attachments/assets/fa9249cb-7129-47c1-9f10-3d5a0f2482e9)
 
 GET(/INTEGRANTES)
