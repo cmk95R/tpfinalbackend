@@ -3,8 +3,8 @@
 
 Integrantes:
 -
-- Cristian Velázquez (devs)
-- Jean Pierre Michel Kong (devs)
+- Cristian Velázquez (Rol: devs)
+- Jean Pierre Michel Kong (Rol: devs)
 
 Primeramente mapeamos y estructuramos el proyecto de acuerdo a las consignas:
 
