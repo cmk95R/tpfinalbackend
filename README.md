@@ -1,5 +1,5 @@
 
-# Project Title
+# TP Final de Backend
 
 Integrantes:
 -
@@ -86,9 +86,9 @@ AuthRoutes.js:
 =
 - **para validar la funcionalidad de las siguientes rutas, hay que tener en cuenta los siguientes aspectos:**
 
-  1. Todo usuario puede registrarse siempre y cuando proporcione los datos correctamente (email y password)
-  2. No se podra acceder a ninguna funcionalidad si no se está logueado, debido al token
-  3. Una vez logueado, se le proporcionara al usuario un token con el que navegara
+  1) Todo usuario puede registrarse siempre y cuando proporcione los datos correctamente (email y password)
+  2) No se podra acceder a ninguna funcionalidad si no se está logueado, debido al token
+  3) Una vez logueado, se le proporcionara al usuario un token con el que navegara
 
 
 
