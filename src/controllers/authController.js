@@ -4,6 +4,7 @@ const Movie = require("../models/movie");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+//Función Registro
 const register = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -15,6 +16,7 @@ const register = async (req, res) => {
     }
 };
 
+//Función logueo
 const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -47,10 +49,11 @@ const login = async (req, res) => {
         });
     }
 };
+
+//Función mostrar perfil usuario
 const profile = async (req, res) => {
     try {
         const userId = req.user.id;
- usuario
         const user = await User.findById(userId).select("-password"); // Excluye la contraseña del usuario
 
         if (!user) {
@@ -70,6 +73,8 @@ const profile = async (req, res) => {
         res.status(500).json({ error: "Error al obtener el perfil", details: error.message });
     }
 };
+
+//Función logout
 const logout = (req, res) => {
 
     res.json({ message: "Logout exitoso. El token debe ser eliminado del header." });
