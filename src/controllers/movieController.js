@@ -1,22 +1,21 @@
 const Movie = require("../models/movie");
-const mongoose = require("mongoose"); // Agregar esto al inicio del archivo
+const mongoose = require("mongoose");
 
 // Obtener todas las películas
 const getAllMovies = async (req, res) => {
     try {
-        // Eliminar el filtro `createdBy`, ya que ahora todos los usuarios pueden ver todas las películas.
-        const movies = await Movie.find();  // Devuelve todas las películas en la base de datos
+        
+        const movies = await Movie.find();  
         res.json(movies);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener las películas" });
     }
 };
 
-
+/*Obtner una pelicula por su ID */
 const getMovieById = async (req, res) => {
     const { id } = req.params;
     try {
-        // Verificar si el ID es válido
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "ID inválido" });
         }
@@ -34,7 +33,8 @@ const getMovieById = async (req, res) => {
 };
 
 
-// Agregar película
+/* Agregar película */
+
 const addMovie = async (req, res) => {
     const { title, genre, year, rating } = req.body;
     try {
@@ -43,7 +43,7 @@ const addMovie = async (req, res) => {
             genre,
             year,
             rating,
-            createdBy: req.user.id, // Este ID debe ser del usuario autenticado
+            createdBy: req.user.id, 
         });
         await newMovie.save();
         res.status(201).json(newMovie);
@@ -54,7 +54,8 @@ const addMovie = async (req, res) => {
 };
 
 
-// Actualizar película
+/* Actualizar datos de una pelicula*/ 
+
 const updateMovie = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
@@ -67,7 +68,7 @@ const updateMovie = async (req, res) => {
     }
 };
 
-// Eliminar película
+/*Eliminar película*/
 const deleteMovie = async (req, res) => {
     const { id } = req.params;
     try {
