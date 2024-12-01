@@ -1,103 +1,104 @@
-const fs = require ("fs");
-const path = require ("path");
+const Integrante = require("../models/integrante");
 
-const integrantesFilePath = path.join(__dirname, '../db-json/integrantes.JSON');
+// Controladores
 
-const getIntegrantes = () => {
-    const data = fs.readFileSync(integrantesFilePath, "utf-8");
-    return JSON.parse(data);
+// GET: Home
+const getHome = (req, res) => {
+    res.send("API funcionando correctamente con MongoDB Atlas");
 };
 
-const saveIntegrantes = (data) =>{
-    fs.writeFileSync(integrantesFilePath, JSON.stringify(data, null, 2), "utf-8");
-}
-
-
-//Controladores
-
-//GET
-const getHome = (req, res) =>{
-    res.send("api funcionando correctamente");
-}
-
-const getAllIntegrantes = (req,res) => {
-    const integrantes = getIntegrantes ();
-    res.json(integrantes);
-}
-
-const getIntegrantesByDni = (req, res) => {
-    const {dni} = req.params;
-    console.log(dni);
-    const integrante = getIntegrantes().find((i) => i.dni == dni);
-    console.log(integrante);
-    if(integrante){
-        res.json(integrante);
-    }else{
-        res.status(404).send("integrante no encontrado");
-    }
-
-}
-/////////////////
-
-//Post
-const addIntegrantes = (req, res) => {
-    const {nombre, apellido, dni, email} = req.body;
-    if (!nombre || !apellido || !dni || !email){
-        return res.status(400).send("Todos los campos son obligatorios")
-    }
-    const integrante = getIntegrantes();
-    integrante.push({nombre,apellido,dni,email});
-    saveIntegrantes(integrante);
-    res.json(integrante);
-}
-/////////////////
-
-//Put
-const updateIntegranteByEmail = (req, res) => {
-    const { email } = req.params;
-    const { apellido } = req.body;
-
-    if (!apellido) {
-        return res.status(400).send("El apellido es obligatorio");
-    }
-
-    const integrantes = getIntegrantes();
-    console.log("Integrantes disponibles:", integrantes); // Verifica el contenido del archivo
-    console.log("Email buscado:", email); // Verifica el email recibido
-
-    const integrante = integrantes.find((i) => i.email === email);
-
-    if (integrante) {
-        integrante.apellido = apellido;
-        saveIntegrantes(integrantes);
-        res.json(integrante);
-    } else {
-        res.status(404).send("Integrante no encontrado para actualizar");
+// GET: Todos los integrantes
+const getAllIntegrantes = async (req, res) => {
+    try {
+        const integrantes = await Integrante.find();
+        res.json(integrantes);
+    } catch (err) {
+        res.status(500).json({ error: "Error al obtener integrantes" });
     }
 };
-/////////////////
 
-//Delete
-const deleteIntegrantesByDni = (req, res) => {
-    const { dni } = req.params;
-    const integrantes = getIntegrantes();
-    const integranteIndex = integrantes.findIndex((i) => i.dni == dni);
-
-    if (integranteIndex === -1) {
-        // Si no se encuentra, devolver un 404
-        return res.status(404).json({ error: "Integrante no encontrado" });
+// GET: Integrante por DNI
+const getIntegrantesByDni = async (req, res) => {
+    try {
+        const { dni } = req.params;
+        const integrante = await Integrante.findOne({ dni });
+        if (integrante) {
+            res.json(integrante);
+        } else {
+            res.status(404).json({ error: "Integrante no encontrado" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Error al buscar integrante por DNI" });
     }
-
-    const integranteEliminado = integrantes.splice(integranteIndex, 1)[0];
-
-    saveIntegrantes(integrantes);
-    res.status(200).json({
-        message: "Integrante eliminado con éxito",
-        integrante: integranteEliminado,
-        integrantes: integrantes
-    });
 };
-/////////////////
 
+// POST: Agregar un integrante
+const addIntegrantes = async (req, res) => {
+    try {
+        const { nombre, apellido, dni, email } = req.body;
 
-module.exports = {getHome, getAllIntegrantes, getIntegrantesByDni,addIntegrantes, updateIntegranteByEmail, deleteIntegrantesByDni};
+        if (!nombre || !apellido || !dni || !email) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+
+        const nuevoIntegrante = new Integrante({ nombre, apellido, dni, email });
+        await nuevoIntegrante.save();
+        res.status(201).json(nuevoIntegrante);
+    } catch (err) {
+        res.status(500).json({ error: "Error al agregar integrante" });
+    }
+};
+
+// PUT: Actualizar un integrante por Email
+const updateIntegranteByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const { apellido } = req.body;
+
+        if (!apellido) {
+            return res.status(400).json({ error: "El apellido es obligatorio" });
+        }
+
+        const integrante = await Integrante.findOneAndUpdate(
+            { email },
+            { apellido },
+            { new: true } // Retorna el documento actualizado
+        );
+
+        if (integrante) {
+            res.json(integrante);
+        } else {
+            res.status(404).json({ error: "Integrante no encontrado para actualizar" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Error al actualizar integrante" });
+    }
+};
+
+// DELETE: Eliminar un integrante por DNI
+const deleteIntegrantesByDni = async (req, res) => {
+    try {
+        const { dni } = req.params;
+        const integranteEliminado = await Integrante.findOneAndDelete({ dni });
+
+        if (integranteEliminado) {
+            res.status(200).json({
+                message: "Integrante eliminado con éxito",
+                integrante: integranteEliminado,
+            });
+        } else {
+            res.status(404).json({ error: "Integrante no encontrado para eliminar" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Error al eliminar integrante" });
+    }
+};
+
+module.exports = {
+    getHome,
+    getAllIntegrantes,
+    getIntegrantesByDni,
+    addIntegrantes,
+    updateIntegranteByEmail,
+    deleteIntegrantesByDni,
+};

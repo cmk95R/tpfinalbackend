@@ -4,6 +4,11 @@ const methodOverride = require('method-override');
 const app = express();
 const integrantesRoutes = require ("./routes/integrantesRoutes");
 
+require("dotenv").config();
+const connectDB = require("./db/db");
+
+connectDB();
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json()); 
 app.use(methodOverride('_method'));
