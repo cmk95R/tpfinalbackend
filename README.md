@@ -109,8 +109,11 @@ Nota adicional: a la hora de registrarse, se creará un token que permitirá el 
 
 
 Profile:
+
 Tipo: GET
+
 URL: http://localhost:3000/auth/profile
+
 Header > Authorization: TokenDeEjemploParaValidaciones
 
 
